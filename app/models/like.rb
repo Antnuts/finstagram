@@ -1,7 +1,8 @@
 class Like < ActiveRecord::Base
 
- has_many :finstagram_posts
-  has_many :comments
-  has_many :likes
+  belongs_to :user
+  belongs_to :finstagram_post
+
+  validates_presence_of :user, :finstagram_post
 
 end

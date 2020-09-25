@@ -16,3 +16,4 @@
 </form>
 
 
+<%= erb(:'shared/errors', {locals: { errors: @finstagram_post.errors.full_messages }}) %>

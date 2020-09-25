@@ -6,6 +6,16 @@
 #   end
 # end
 
+# helpers do
+#     def current_user
+#         user.find_by(id: session(:user_id))
+        
+#     def logged_in?
+#         !!current_user
+#     end
+# end
+        
+
 get '/' do
   @finstagram_posts = FinstagramPost.order(created_at: :desc)
   @current_user = User.find_by(id: session[:user_id])
@@ -63,6 +73,10 @@ get '/logout' do
   redirect to('/')
 end
 
+# before '/finstagram_posts/new' do
+#     redirect to('/login') unless logged_in?
+# end 
+
 get '/finstagram_posts/new' do
   @finstagram_post = FinstagramPost.new
   erb(:"finstagram_posts/new")
@@ -83,4 +97,34 @@ end
 get '/finstagram_posts/:id' do
   @finstagram_post = FinstagramPost.find(params[:id])   # find the finstagram post with the ID from the URL
   erb(:"finstagram_posts/show")               # render app/views/finstagram_posts/show.erb
+  end
+
+post '/comments' do
+  # point values from params to variables
+  text = params[:text]
+  finstagram_post_id = params[:finstagram_post_id]
+
+  # instantiate a comment with those values & assign the comment to the `current_user`
+  comment = Comment.new({ text: text, finstagram_post_id: finstagram_post_id, user_id: current_user.id })
+
+  # save the comment
+  comment.save
+
+  # `redirect` back to wherever we came from
+  redirect(back)
+end
+
+post '/likes' do
+  finstagram_post_id = params[:finstagram_post_id]
+
+  like = Like.new({ finstagram_post_id: finstagram_post_id, user_id: current_user.id })
+  like.save
+
+  redirect(back)
+end
+
+delete '/likes/:id' do
+  like = Like.find(params[:id])
+  like.destroy
+  redirect(back)
 end

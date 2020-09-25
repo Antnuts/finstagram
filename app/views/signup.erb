@@ -26,3 +26,5 @@
     <button class="button" type="submit">Signup</button>
   </div>
 </form>
+
+<%= erb(:'shared/errors', {locals: { errors: @users.errors.full_messages }}) %>
